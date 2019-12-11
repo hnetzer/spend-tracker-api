@@ -27,9 +27,9 @@ const PLAID_COUNTRY_CODES = envvar.string('PLAID_COUNTRY_CODES', 'US,CA,GB,FR,ES
 
 // We store the access_token in memory - in production, store it in a secure
 // persistent data store
-const ACCESS_TOKEN = null;
-const PUBLIC_TOKEN = null;
-const ITEM_ID = null;
+var ACCESS_TOKEN = null;
+var PUBLIC_TOKEN = null;
+var ITEM_ID = null;
 
 // Initialize the Plaid client
 // Find your API keys in the Dashboard (https://dashboard.plaid.com/account/keys)
@@ -55,6 +55,15 @@ app.use(bodyParser.json());
 // https://plaid.com/docs/#exchange-token-flow
 app.post('/get_access_token', function(request, response, next) {
   PUBLIC_TOKEN = request.body.public_token;
+  console.log("got public token")
+  console.log(request.body)
+
+  if(!PUBLIC_TOKEN) {
+    return response.json({
+      error: "public token not supplied in request body",
+    });
+  }
+
   client.exchangePublicToken(PUBLIC_TOKEN, function(error, tokenResponse) {
     if (error != null) {
       prettyPrintResponse(error);
@@ -65,7 +74,7 @@ app.post('/get_access_token', function(request, response, next) {
     ACCESS_TOKEN = tokenResponse.access_token;
     ITEM_ID = tokenResponse.item_id;
     prettyPrintResponse(tokenResponse);
-    response.json({
+    return response.json({
       access_token: ACCESS_TOKEN,
       item_id: ITEM_ID,
       error: null,
@@ -77,6 +86,7 @@ app.post('/get_access_token', function(request, response, next) {
 // https://plaid.com/docs/#transactions
 app.get('/transactions', function(request, response, next) {
   // Pull transactions for the Item for the last 30 days
+  ACCESS_TOKEN = request.query.access_token;
   var startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
   var endDate = moment().format('YYYY-MM-DD');
   client.getTransactions(ACCESS_TOKEN, startDate, endDate, {
