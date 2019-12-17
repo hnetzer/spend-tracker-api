@@ -105,6 +105,14 @@ app.get('/transactions', function(request, response, next) {
   });
 });
 
+// status health endpoint
+app.get('/status', function(request, response, next) {
+  // Pull transactions for the Item for the last 30 days
+  return response.json({
+    status: "we up, we good..."
+  });
+});
+
 
 const server = app.listen(APP_PORT, function() {
   console.log('plaid-quickstart server listening on port ' + APP_PORT);
