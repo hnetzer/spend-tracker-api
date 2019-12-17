@@ -10,7 +10,7 @@ const plaid = require('plaid');
 
 dotenv.config()
 
-const APP_PORT = envvar.number('APP_PORT', 8000);
+const PORT = envvar.number('PORT', 8000);
 const PLAID_CLIENT_ID = envvar.string('PLAID_CLIENT_ID');
 const PLAID_SECRET = envvar.string('PLAID_SECRET');
 const PLAID_PUBLIC_KEY = envvar.string('PLAID_PUBLIC_KEY');
@@ -114,8 +114,8 @@ app.get('/status', function(request, response, next) {
 });
 
 
-const server = app.listen(APP_PORT, function() {
-  console.log('plaid-quickstart server listening on port ' + APP_PORT);
+const server = app.listen(PORT, function() {
+  console.log('plaid-quickstart server listening on port ' + PORT);
 });
 
 const prettyPrintResponse = response => {

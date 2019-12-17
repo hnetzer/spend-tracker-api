@@ -1,7 +1,7 @@
 {
   "name": "spendtracker-api",
   "env": {
-    "APP_PORT": {
+    "PORT": {
       "required": false
     },
     "PLAID_CLIENT_ID": {
